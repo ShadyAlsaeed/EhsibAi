@@ -104,8 +104,6 @@ footer a{color:var(--violet)}
       <div><label for="sI" data-t="lvlI"></label><input id="sI" type="number" min="0" step="any" inputmode="decimal" placeholder="500"></div>
       <div><label for="sP" data-t="lvlP"></label><input id="sP" type="number" min="0" step="any" inputmode="decimal" placeholder="1000"></div>
     </div>
-    <label for="sPC" data-t="perCredit"></label>
-    <input id="sPC" type="number" min="0" step="any" inputmode="decimal" placeholder="0.05125">
     <p class="err" id="setupErr" aria-live="polite"></p>
     <div class="btns"><button id="setupSave" class="primary" data-t="setupSave"></button></div>
   </div>
@@ -185,8 +183,6 @@ footer a{color:var(--violet)}
               <div><label for="rI" data-t="lvlI"></label><input id="rI" type="number" min="0" step="any" inputmode="decimal"></div>
               <div><label for="rP" data-t="lvlP"></label><input id="rP" type="number" min="0" step="any" inputmode="decimal"></div>
             </div>
-            <label for="perCredit" data-t="perCredit"></label>
-            <input id="perCredit" type="number" min="0" step="any" inputmode="decimal">
             <div class="ml"><label for="riskOpts" data-t="riskOpts"></label>
               <input id="riskOpts" type="text" dir="ltr"></div>
             <p class="small" data-t="roundNote"></p>
@@ -235,6 +231,7 @@ footer a{color:var(--violet)}
 /* ============ OWNER SWITCHES (fill in before posting) ============ */
 var FEEDBACK_URL = '';          // Google Form link; empty = hidden
 var SHOW_COMMUNITY_LINE = false; // true only after Efham admins say OK
+var MAGNIFIC_COST_PER_CREDIT = 0.05125; // EGP per Magnific credit. Fixed for all users. Change ONLY if Magnific changes its price.
 
 /* ============ ENGINE (pure math, unchanged from v0.2) ============ */
 //ENGINE-START
@@ -281,8 +278,8 @@ var TX = {
     tagline: 'Understand your work with EfhamAI. Calculate its value with EhsibAI.',
     privacy: 'Your data stays on this device',
     saved: '✓ Saved on this device', notSaved: '⚠️ NOT saved: this browser blocks storage. Use "Download backup".',
-    setupTitle: 'Set your own rates first', setupSub: 'The grey numbers are only examples. Type your own hourly rates and your Magnific cost per credit.',
-    setupSave: 'Save and start', setupErr: 'Fill all four fields with numbers above 0.',
+    setupTitle: 'Set your own rates first', setupSub: 'The grey numbers are only examples. Type your own hourly rates.',
+    setupSave: 'Save and start', setupErr: 'Fill all three rates with numbers above 0.',
     howTitle: 'How it works', loadEx: 'Load example', loadExConfirm: 'Replace the current project with the example?',
     how: ['Add your Efham generations, Magnific operations and other expenses. Together these are your Costs.',
           'Enter how many hours the project will take.',
@@ -302,7 +299,7 @@ var TX = {
     fillNone: 'Add generation or operation lines with a quantity first.', fillArm: 'Click again to replace your text',
     fillArmMsg: 'The box already has text. Click again within 5 seconds to replace it.', fillDone: 'Filled — edit it as you like.',
     days: 'Delivery time (days)', revs: 'Included revisions', valid: 'Valid until', notes: 'Assumptions / exclusions',
-    settings: 'Settings', rates: 'Hourly rates (EGP)', perCredit: 'Magnific cost per credit (EGP) = pack price ÷ credits in pack',
+    settings: 'Settings', rates: 'Hourly rates (EGP)',
     riskOpts: 'Risk options (% separated by commas)', roundNote: 'Rounding: the final price is rounded up to the nearest 50 EGP.',
     resetSet: 'Reset settings to defaults',
     backup: 'Backup', backupSub: 'Your data is saved in this browser only. Download a backup file to keep it safe or to move it to another device.',
@@ -326,8 +323,8 @@ var TX = {
     tagline: 'افهم شغلك مع EfhamAI. واحسب قيمته مع EhsibAI.',
     privacy: 'بياناتك بتفضل على جهازك بس',
     saved: '✓ اتحفظ على جهازك', notSaved: '⚠️ ما اتحفظش: المتصفح ده مانع الحفظ. استخدم "نزّل نسخة احتياطية".',
-    setupTitle: 'اظبط أسعارك الأول', setupSub: 'الأرقام الرمادي دي مجرد أمثلة. اكتب سعر ساعتك إنت وتكلفة كريدت Magnific عندك.',
-    setupSave: 'احفظ وابدأ', setupErr: 'املا الأربع خانات بأرقام أكبر من 0.',
+    setupTitle: 'اظبط أسعارك الأول', setupSub: 'الأرقام الرمادي دي مجرد أمثلة. اكتب سعر ساعتك إنت.',
+    setupSave: 'احفظ وابدأ', setupErr: 'املا الأسعار التلاتة بأرقام أكبر من 0.',
     howTitle: 'بيشتغل إزاي؟', loadEx: 'جرّب مثال', loadExConfirm: 'تستبدل المشروع الحالي بالمثال؟',
     how: ['ضيف توليدات إفهم وعمليات Magnific وأي مصاريف تانية. دول مع بعض هما التكاليف.',
           'اكتب المشروع هياخد كام ساعة شغل.',
@@ -347,7 +344,7 @@ var TX = {
     fillNone: 'ضيف سطور توليد أو عمليات بكمية الأول.', fillArm: 'دوس تاني عشان تستبدل كلامك',
     fillArmMsg: 'الخانة فيها كلام. دوس تاني خلال 5 ثواني عشان تستبدله.', fillDone: 'اتملت — عدّل براحتك.',
     days: 'مدة التسليم (أيام)', revs: 'عدد التعديلات', valid: 'العرض ساري لحد', notes: 'ملاحظات / حاجات مش مشمولة',
-    settings: 'الإعدادات', rates: 'سعر الساعة (ج.م)', perCredit: 'تكلفة كريدت Magnific (ج.م) = سعر الباقة ÷ عدد الكريدت فيها',
+    settings: 'الإعدادات', rates: 'سعر الساعة (ج.م)',
     riskOpts: 'اختيارات هامش الأمان (% مفصولة بفاصلة)', roundNote: 'التقريب: السعر النهائي بيتقرّب لفوق لأقرب 50 جنيه.',
     resetSet: 'رجّع الإعدادات للأصل',
     backup: 'نسخة احتياطية', backupSub: 'بياناتك محفوظة في المتصفح ده بس. نزّل ملف نسخة احتياطية عشان تحافظ عليها أو تنقلها لجهاز تاني.',
@@ -455,7 +452,7 @@ function doFill(){
 }
 
 /* ============ STATE ============ */
-var DEFAULTS = { rates: { B: 200, I: 500, P: 1000 }, perCredit: 0.05125, riskOpts: [0, 5, 10, 25, 50] };
+var DEFAULTS = { rates: { B: 200, I: 500, P: 1000 }, perCredit: MAGNIFIC_COST_PER_CREDIT, riskOpts: [0, 5, 10, 25, 50] };
 function clone(o){ return JSON.parse(JSON.stringify(o)); }
 var S = clone(DEFAULTS);
 var TYPES = ['Image', 'Video', 'Voice', 'Avatar'];
@@ -514,7 +511,6 @@ function renderRows(){
 function renderQ(){ Q_FIELDS.forEach(function(k){ $('q_' + k).value = Q[k]; }); }
 function renderSettings(){
   $('rB').value = S.rates.B; $('rI').value = S.rates.I; $('rP').value = S.rates.P;
-  $('perCredit').value = S.perCredit;
   $('riskOpts').value = S.riskOpts.join(', ');
   renderTopSelects();
 }
@@ -533,7 +529,7 @@ function row(label, val, cls){ return '<tr' + (cls ? ' class="' + cls + '"' : ''
 var lastSummary = '';
 function currentQuote(){
   return calcQuote({
-    efham: P.efham, mag: P.mag, perCredit: S.perCredit, other: P.other,
+    efham: P.efham, mag: P.mag, perCredit: MAGNIFIC_COST_PER_CREDIT, other: P.other,
     hours: $('hours').value, method: P.method, rate: S.rates[P.level], fixed: $('fixed').value,
     riskPct: P.risk, beginnerRate: S.rates.B
   });
@@ -553,7 +549,7 @@ function recompute(){
   if (!q.error) h += '<div class="hero"><div class="lbl">' + t('finalPrice') + '</div><div class="big" id="bigPrice">' + ni(q.price) + '<span class="cur">' + t('cur') + '</span></div></div>';
   h += '<table class="res">';
   h += row(t('rEfham'), nf(q.efham));
-  h += row(t('rMag') + ' (<bdi>' + ni(q.credits) + '</bdi> ' + t('credits') + ' × <bdi>' + S.perCredit + '</bdi>)', nf(q.magnific));
+  h += row(t('rMag') + ' (<bdi>' + ni(q.credits) + '</bdi> ' + t('credits') + ' × <bdi>' + MAGNIFIC_COST_PER_CREDIT + '</bdi>)', nf(q.magnific));
   h += row(t('rOther'), nf(q.other));
   h += row(t('rCosts'), nf(q.costs), 'sum');
   if (q.error) { $('out').innerHTML = h + '</table><p class="err">' + t(q.error) + '</p>'; return; }
@@ -591,9 +587,9 @@ function showSetup(){
   $('setupCard').hidden = !!S.setupDone;
 }
 function doSetup(){
-  var vals = ['sB', 'sI', 'sP', 'sPC'].map(function(id){ var v = $(id).value; return v === '' ? NaN : +v; });
+  var vals = ['sB', 'sI', 'sP'].map(function(id){ var v = $(id).value; return v === '' ? NaN : +v; });
   if (vals.some(function(v){ return !(v > 0); })) { $('setupErr').textContent = t('setupErr'); return; }
-  S.rates = { B: vals[0], I: vals[1], P: vals[2] }; S.perCredit = vals[3]; S.setupDone = true;
+  S.rates = { B: vals[0], I: vals[1], P: vals[2] }; S.perCredit = MAGNIFIC_COST_PER_CREDIT; S.setupDone = true;
   $('setupErr').textContent = '';
   renderSettings(); showSetup(); recompute();
 }
@@ -623,7 +619,7 @@ function validState(d){
   return !!(d && d.S && d.S.rates && Array.isArray(d.S.riskOpts) && d.P && Array.isArray(d.P.efham) && Array.isArray(d.P.mag) && Array.isArray(d.P.other));
 }
 function applyState(d){
-  S = { rates: { B: +d.S.rates.B || 0, I: +d.S.rates.I || 0, P: +d.S.rates.P || 0 }, perCredit: +d.S.perCredit || 0,
+  S = { rates: { B: +d.S.rates.B || 0, I: +d.S.rates.I || 0, P: +d.S.rates.P || 0 }, perCredit: MAGNIFIC_COST_PER_CREDIT,
         riskOpts: d.S.riskOpts.map(Number).filter(function(n){ return isFinite(n) && n >= 0; }), setupDone: d.S.setupDone !== false };
   if (!S.riskOpts.length) S.riskOpts = DEFAULTS.riskOpts.slice();
   P.efham = d.P.efham.length ? d.P.efham : [newEf()];
@@ -679,7 +675,7 @@ function doImport(file){
 function numOr0(v){ return v === '' ? 0 : +v; }
 document.addEventListener('input', function(e){
   var el = e.target, f = el.dataset.f, k = +el.dataset.k;
-  if (el.id === 'importFile' || /^s(B|I|P|PC)$/.test(el.id)) return;
+  if (el.id === 'importFile' || /^s(B|I|P)$/.test(el.id)) return;
   if (el.dataset.q) Q[el.dataset.q] = el.value;
   else if (f === 'efhamQty') P.efham[k].qty = el.value;
   else if (f === 'efhamPrice') P.efham[k].price = el.value;
@@ -688,7 +684,6 @@ document.addEventListener('input', function(e){
   else if (f === 'othName') P.other[k].name = el.value;
   else if (f === 'othAmt') P.other[k].amount = el.value;
   else if (el.id === 'rB' || el.id === 'rI' || el.id === 'rP') { S.rates[el.id.charAt(1)] = numOr0(el.value); renderTopSelects(); }
-  else if (el.id === 'perCredit') S.perCredit = numOr0(el.value);
   else if (el.id === 'riskOpts') {
     var arr = el.value.split(',').map(function(s){ return parseFloat(s); }).filter(function(n){ return isFinite(n) && n >= 0; });
     if (arr.length) { S.riskOpts = arr; renderTopSelects(); }
@@ -698,7 +693,7 @@ document.addEventListener('input', function(e){
 document.addEventListener('change', function(e){
   var el = e.target, f = el.dataset.f, k = +el.dataset.k;
   if (el.id === 'importFile') { if (el.files && el.files[0]) doImport(el.files[0]); el.value = ''; return; }
-  if (/^s(B|I|P|PC)$/.test(el.id)) return;
+  if (/^s(B|I|P)$/.test(el.id)) return;
   if (el.dataset.q) Q[el.dataset.q] = el.value;
   else if (f === 'efhamType') P.efham[k].type = el.value;
   else if (f === 'magType') P.mag[k].type = el.value;
