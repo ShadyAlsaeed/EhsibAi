@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EhsibAI — احسب AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1F1740;--violet:#7054D1;--lav:#B4A0F5;--mist:#F3EFFC;--white:#fff;--mute:#5d5878;--line:#ddd5f3;--warn:#8a4b00;--warnbg:#fff2dc;--bad:#9b1c1c;--badbg:#fde8e8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--white);color:var(--ink);font:16px/1.5 'IBM Plex Sans Arabic','Roboto',system-ui,sans-serif}
+html[lang=en] body{font-family:'Roboto','IBM Plex Sans Arabic',system-ui,sans-serif}
+b,strong,h1,h2,.sum td,.tot td{font-weight:600}
+html[lang=en] b,html[lang=en] strong,html[lang=en] h1,html[lang=en] h2{font-weight:500}
+header{background:var(--ink);color:#fff}
+.hbar{max-width:1000px;margin:0 auto;padding:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{flex:1;min-width:0}
+h1{font-size:22px;margin:0;line-height:1.3}
+.beta{font-size:12px;color:var(--lav);margin-inline-start:8px;font-weight:400}
+.tag{margin:4px 0 0;font-size:14px;color:var(--lav)}
+#langBtn{background:transparent;color:#fff;border:1px solid var(--lav);min-width:56px}
+.wrap{max-width:1000px;margin:0 auto;padding:16px}
+.status{font-size:13px;color:var(--mute);margin:0 0 16px}
+.grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:840px){.grid{grid-template-columns:1.25fr 1fr;align-items:start}.sticky{position:sticky;top:16px}}
+.card{background:var(--mist);border-radius:16px;padding:16px;margin-bottom:16px}
+.card h2{font-size:17px;margin:0 0 8px}
+.card.setup{border:2px solid var(--violet);background:#fff}
+label{display:block;font-size:13px;color:var(--mute);margin-bottom:4px}
+input,select,textarea{width:100%;font:inherit;min-height:48px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+input[type=number],input[type=date]{direction:ltr}
+html[dir=rtl] input[type=number]{text-align:right}
+textarea{resize:vertical;min-height:96px}
+:focus-visible{outline:3px solid var(--violet);outline-offset:2px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--violet);outline-offset:0}
+.row{display:grid;gap:8px;align-items:end;margin-bottom:8px}
+.row>*{min-width:0}
+.row.three{grid-template-columns:1fr 1.3fr 1fr auto}
+.row.other{grid-template-columns:2fr 1fr auto}
+.row.rates{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:480px){.row.three{grid-template-columns:1fr 1fr auto}.row.three>div:first-child{grid-column:1/-1}}
+.qgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.qgrid>*{min-width:0}
+button{font:inherit;min-height:48px;padding:8px 16px;border-radius:10px;border:1px solid var(--violet);background:#fff;color:var(--violet);cursor:pointer}
+button.primary{background:var(--violet);color:#fff}
+button:disabled{opacity:.5;cursor:not-allowed}
+button.x{padding:8px 14px;color:var(--bad);border-color:var(--line)}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.sub{font-size:13px;color:var(--mute);margin:0 0 8px}
+.seg{display:flex;gap:8px}
+.seg button{flex:1}
+.seg button.on{background:var(--violet);color:#fff}
+.ml{margin-top:16px}
+.small{font-size:13px;color:var(--mute)}
+.err{color:var(--bad);font-size:14px}
+details summary{cursor:pointer;font-weight:600;min-height:32px}
+.how ol{margin:8px 0 0;padding-inline-start:22px}
+.how li{margin-bottom:4px}
+/* result card */
+.res-card{background:var(--ink);color:#fff;border-radius:16px;padding:16px;margin-bottom:16px}
+.res-card h2{font-size:17px;margin:0 0 8px;color:var(--lav)}
+.hero{margin:0 0 16px}
+.hero .lbl{color:var(--lav);font-size:14px}
+.hero .big{font-size:40px;font-weight:600;line-height:1.15;direction:ltr;unicode-bidi:isolate}
+html[dir=rtl] .hero .big{text-align:right}
+.hero .cur{font-size:18px;color:var(--lav);margin-inline-start:6px}
+.res{width:100%;border-collapse:collapse}
+.res td{padding:6px 0;border-bottom:1px dashed rgba(180,160,245,.35);vertical-align:top}
+.res td:first-child{color:var(--lav)}
+.res td.n{text-align:end;white-space:nowrap;font-variant-numeric:tabular-nums;padding-inline-start:12px}
+.res tr.sum td{color:#fff;font-weight:600}
+.res tr.tot td{color:#fff;font-size:20px;border-bottom:0;padding-top:12px}
+.res-card .err{color:#ffc9c9}
+.res-card button{background:transparent;color:#fff;border-color:var(--lav)}
+.alert{padding:12px;border-radius:10px;margin-top:12px;font-size:14px}
+.alert.warn{background:var(--warnbg);color:var(--warn)}
+.alert.bad{background:var(--badbg);color:var(--bad)}
+.num{direction:ltr;unicode-bidi:isolate}
+footer{max-width:1000px;margin:0 auto;padding:8px 16px 32px;font-size:13px;color:var(--mute)}
+footer a{color:var(--violet)}
+</style>
+</head>
+<body>
+<header>
+  <div class="hbar">
+    <div class="brand">
+      <h1>EhsibAI · <span dir="rtl">احسب AI</span><span class="beta">v0.3 beta</span></h1>
+      <p class="tag" data-t="tagline"></p>
+    </div>
+    <button id="langBtn" aria-label="Language"></button>
+  </div>
+</header>
+
+<div class="wrap">
+  <p class="status"><span id="saveStatus"></span> · <span data-t="privacy"></span></p>
+
+  <div class="card setup" id="setupCard" hidden>
+    <h2 data-t="setupTitle"></h2>
+    <p class="sub" data-t="setupSub"></p>
+    <div class="row rates">
+      <div><label for="sB" data-t="lvlB"></label><input id="sB" type="number" min="0" step="any" inputmode="decimal" placeholder="200"></div>
+      <div><label for="sI" data-t="lvlI"></label><input id="sI" type="number" min="0" step="any" inputmode="decimal" placeholder="500"></div>
+      <div><label for="sP" data-t="lvlP"></label><input id="sP" type="number" min="0" step="any" inputmode="decimal" placeholder="1000"></div>
+    </div>
+    <p class="err" id="setupErr" aria-live="polite"></p>
+    <div class="btns"><button id="setupSave" class="primary" data-t="setupSave"></button></div>
+  </div>
+
+  <div class="card how">
+    <details id="howBox">
+      <summary data-t="howTitle"></summary>
+      <ol id="howList"></ol>
+    </details>
+    <div class="btns ml"><button id="loadEx" data-t="loadEx"></button></div>
+  </div>
+
+  <div class="grid">
+    <div>
+      <div class="card">
+        <h2 data-t="c1"></h2>
+        <div id="efhamRows"></div>
+        <button id="addEfham" data-t="addGen"></button>
+      </div>
+
+      <div class="card">
+        <h2 data-t="c2"></h2>
+        <div id="magRows"></div>
+        <button id="addMag" data-t="addOp"></button>
+      </div>
+
+      <div class="card">
+        <h2 data-t="c3"></h2>
+        <div id="otherRows"></div>
+        <button id="addOther" data-t="addOther"></button>
+      </div>
+
+      <div class="card">
+        <h2 data-t="c4"></h2>
+        <label for="hours" data-t="hours"></label>
+        <input id="hours" type="number" min="0" step="any" inputmode="decimal" value="">
+        <div class="ml"><label data-t="method"></label>
+          <div class="seg"><button id="mHourly" class="on" data-t="hourly"></button><button id="mFixed" data-t="fixed"></button></div>
+        </div>
+        <div id="hourlyBox" class="ml">
+          <label for="level" data-t="level"></label><select id="level"></select>
+        </div>
+        <div id="fixedBox" class="ml" hidden>
+          <label for="fixed" data-t="fixedLbl"></label>
+          <input id="fixed" type="number" min="0" step="any" inputmode="decimal">
+        </div>
+        <div class="ml"><label for="risk" data-t="risk"></label><select id="risk"></select></div>
+      </div>
+
+      <div class="card">
+        <h2 data-t="c5"></h2>
+        <p class="sub" data-t="c5sub"></p>
+        <div class="qgrid">
+          <div><label for="q_client" data-t="client"></label><input id="q_client" type="text" autocomplete="off" data-q="client"></div>
+          <div><label for="q_project" data-t="project"></label><input id="q_project" type="text" autocomplete="off" data-q="project"></div>
+        </div>
+        <div class="ml"><label for="q_deliverables" data-t="deliv"></label>
+          <textarea id="q_deliverables" rows="3" autocomplete="off" data-q="deliverables"></textarea>
+          <div class="btns ml"><button id="fillDel"></button></div>
+          <p class="small" id="fillMsg" aria-live="polite"></p></div>
+        <div class="qgrid ml">
+          <div><label for="q_days" data-t="days"></label><input id="q_days" type="number" min="0" step="any" inputmode="decimal" data-q="days"></div>
+          <div><label for="q_revisions" data-t="revs"></label><input id="q_revisions" type="number" min="0" step="1" inputmode="numeric" data-q="revisions"></div>
+          <div><label for="q_valid" data-t="valid"></label><input id="q_valid" type="date" data-q="valid"></div>
+        </div>
+        <div class="ml"><label for="q_notes" data-t="notes"></label>
+          <textarea id="q_notes" rows="3" autocomplete="off" data-q="notes"></textarea></div>
+      </div>
+
+      <div class="card">
+        <details id="setBox">
+          <summary data-t="settings"></summary>
+          <div class="ml">
+            <label data-t="rates"></label>
+            <div class="row rates">
+              <div><label for="rB" data-t="lvlB"></label><input id="rB" type="number" min="0" step="any" inputmode="decimal"></div>
+              <div><label for="rI" data-t="lvlI"></label><input id="rI" type="number" min="0" step="any" inputmode="decimal"></div>
+              <div><label for="rP" data-t="lvlP"></label><input id="rP" type="number" min="0" step="any" inputmode="decimal"></div>
+            </div>
+            <div class="ml"><label for="riskOpts" data-t="riskOpts"></label>
+              <input id="riskOpts" type="text" dir="ltr"></div>
+            <p class="small" data-t="roundNote"></p>
+          </div>
+          <div class="btns"><button id="resetSet" data-t="resetSet"></button></div>
+        </details>
+      </div>
+
+      <div class="card">
+        <h2 data-t="backup"></h2>
+        <p class="sub" data-t="backupSub"></p>
+        <div class="btns">
+          <button id="exportBtn" data-t="export"></button>
+          <button id="importBtn" data-t="import"></button>
+          <input id="importFile" type="file" accept=".json,application/json" hidden>
+        </div>
+        <p class="small" id="backupMsg" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <div class="sticky">
+      <div class="res-card">
+        <h2 data-t="result"></h2>
+        <div id="out"></div>
+        <div class="btns ml"><button id="clearProj" data-t="clearProj"></button></div>
+      </div>
+
+      <div class="card">
+        <h2 data-t="sumTitle"></h2>
+        <p class="sub" data-t="sumSub"></p>
+        <label data-t="sumLang"></label>
+        <div class="seg"><button id="sumAr">العربي</button><button id="sumEn">English</button></div>
+        <textarea id="sumText" class="ml" rows="12" readonly></textarea>
+        <div class="btns ml"><button id="copySum" class="primary" disabled data-t="copy"></button></div>
+        <p class="small" id="copyMsg" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+</div>
+<footer>
+  <span id="feedbackWrap" hidden><a id="feedbackLink" target="_blank" rel="noopener" data-t="feedback"></a></span>
+  <span id="communityLine" hidden data-t="community"></span>
+</footer>
+
+<script>
+/* ============ OWNER SWITCHES (fill in before posting) ============ */
+var FEEDBACK_URL = '';          // Google Form link; empty = hidden
+var SHOW_COMMUNITY_LINE = false; // true only after Efham admins say OK
+var MAGNIFIC_COST_PER_CREDIT = 0.05125; // EGP per Magnific credit. Fixed for all users. Change ONLY if Magnific changes its price.
+
+/* ============ ENGINE (pure math, unchanged from v0.2) ============ */
+//ENGINE-START
+function r2(n){ return Math.round((n + Number.EPSILON) * 100) / 100; }
+function calcQuote(i){
+  var efham = 0, i2;
+  for (i2 = 0; i2 < i.efham.length; i2++) efham += (+i.efham[i2].price || 0) * (+i.efham[i2].qty || 0);
+  var credits = 0;
+  for (i2 = 0; i2 < i.mag.length; i2++) credits += (+i.mag[i2].credits || 0) * (+i.mag[i2].qty || 0);
+  var magnific = credits * (+i.perCredit || 0);
+  var other = 0;
+  for (i2 = 0; i2 < i.other.length; i2++) other += (+i.other[i2].amount || 0);
+  efham = r2(efham); magnific = r2(magnific); other = r2(other);
+  var costs = r2(efham + magnific + other);
+  var hours = +i.hours || 0;
+  var rp = (+i.riskPct || 0) / 100;
+  var out = { efham: efham, credits: credits, magnific: magnific, other: other, costs: costs, hours: hours, method: i.method };
+  if (!(hours > 0)) { out.error = 'needHours'; return out; }
+  var pre;
+  if (i.method === 'hourly') {
+    out.labour = r2(hours * (+i.rate || 0));
+    var subtotal = r2(costs + out.labour);
+    out.risk = r2(subtotal * rp);
+    pre = r2(subtotal + out.risk);
+  } else {
+    out.typed = r2(+i.fixed || 0);
+    out.risk = r2(out.typed * rp);
+    pre = r2(out.typed + out.risk);
+  }
+  out.pre = pre;
+  out.price = Math.ceil(pre / 50 - 1e-9) * 50;
+  out.rounding = r2(out.price - pre);
+  out.earn = r2(out.price - costs);
+  out.perHour = r2(out.earn / hours);
+  out.loss = out.price < costs;
+  out.belowBeginner = out.perHour < (+i.beginnerRate || 0);
+  return out;
+}
+//ENGINE-END
+
+/* ============ WORDS (English / Egyptian Arabic) ============ */
+var TX = {
+  en: {
+    tagline: 'Understand your work with EfhamAI. Calculate its value with EhsibAI.',
+    privacy: 'Your data stays on this device',
+    saved: '✓ Saved on this device', notSaved: '⚠️ NOT saved: this browser blocks storage. Use "Download backup".',
+    setupTitle: 'Set your own rates first', setupSub: 'The grey numbers are only examples. Type your own hourly rates.',
+    setupSave: 'Save and start', setupErr: 'Fill all three rates with numbers above 0.',
+    howTitle: 'How it works', loadEx: 'Load example', loadExConfirm: 'Replace the current project with the example?',
+    how: ['Add your Efham generations, Magnific operations and other expenses. Together these are your Costs.',
+          'Enter how many hours the project will take.',
+          'Choose Hourly (hours × your rate) or Fixed price (you type the price you want).',
+          'Risk adds a safety margin on top, for surprises like extra revisions or failed generations.',
+          'Rounding rounds the final price up to the nearest 50 EGP. "How much you earn" = final price − costs.'],
+    c1: '1 · Efham generations', type: 'Type', costPerGen: 'Cost per generation (EGP)', gens: 'Generations', addGen: '+ Add generation line',
+    c2: '2 · Magnific operations', credPerOp: 'Credits per operation', ops: 'Operations', addOp: '+ Add operation line',
+    c3: '3 · Other expenses', name: 'Name', egpCol: 'EGP', addOther: '+ Add expense', remove: 'Remove',
+    c4: '4 · Hours, pricing method, risk', hours: 'Hours of work (required, more than 0)', method: 'Pricing method',
+    hourly: 'Hourly', fixed: 'Fixed price', level: 'Level', fixedLbl: 'Price you want to quote (EGP)', risk: 'Risk',
+    lvlB: 'Beginner', lvlI: 'Intermediate', lvlP: 'Professional', perH: 'EGP/h',
+    tImage: 'Image', tVideo: 'Video', tVoice: 'Voice', tAvatar: 'Avatar',
+    c5: '5 · Quote details (for the client summary)', c5sub: 'All optional. Empty fields are left out of the summary. Your costs, hours and earnings are never included.',
+    client: 'Client name', project: 'Project name', deliv: 'Deliverables (what the client gets)',
+    fill: 'Fill from my lines', fillHint: 'Draft from your Efham and Magnific quantities (by type). Edit it freely.',
+    fillNone: 'Add generation or operation lines with a quantity first.', fillArm: 'Click again to replace your text',
+    fillArmMsg: 'The box already has text. Click again within 5 seconds to replace it.', fillDone: 'Filled — edit it as you like.',
+    days: 'Delivery time (days)', revs: 'Included revisions', valid: 'Valid until', notes: 'Assumptions / exclusions',
+    settings: 'Settings', rates: 'Hourly rates (EGP)',
+    riskOpts: 'Risk options (% separated by commas)', roundNote: 'Rounding: the final price is rounded up to the nearest 50 EGP.',
+    resetSet: 'Reset settings to defaults',
+    backup: 'Backup', backupSub: 'Your data is saved in this browser only. Download a backup file to keep it safe or to move it to another device.',
+    export: 'Download backup', import: 'Restore from backup',
+    importConfirm: 'Restoring replaces ALL current data. A backup of your current data will download first. Continue?',
+    importOk: 'Restored ✓', importBad: 'This file is not an EhsibAI backup. Nothing was changed.', exportOk: 'Backup downloaded ✓',
+    result: 'Result', finalPrice: 'Final price', cur: 'EGP',
+    rEfham: 'Efham generations', rMag: 'Magnific', credits: 'credits', rOther: 'Other expenses', rCosts: 'Costs',
+    rLabour: 'Your labour', rTyped: 'Price you typed', rRisk: 'Risk', rTotH: 'Total (Costs + Labour + Risk)', rTotF: 'Total (Price + Risk)',
+    rRound: 'Rounding', rFinal: 'Final price (EGP)', rEarn: 'How much you earn', rPerHour: 'Per hour',
+    needHours: 'Enter hours of work (more than 0).',
+    loss: '🛑 Loss: the price is below your costs.',
+    below: '⚠️ Below hourly rate: you earn less per hour than the Beginner rate',
+    clearProj: 'Clear this project (keeps Settings)',
+    sumTitle: 'Client summary', sumSub: 'This is what the client sees: price and quote details only.', sumLang: 'Summary language',
+    copy: 'Copy client summary', copied: 'Copied ✓', copyFail: 'Could not copy automatically — the text is selected: press Ctrl+C (or long-press → Copy).',
+    sumPh: 'Enter hours of work (more than 0) to get a price and a summary.',
+    feedback: 'Send feedback', community: 'Built by a member of the Efham community', exampleName: 'Example project'
+  },
+  ar: {
+    tagline: 'افهم شغلك مع EfhamAI. واحسب قيمته مع EhsibAI.',
+    privacy: 'بياناتك بتفضل على جهازك بس',
+    saved: '✓ اتحفظ على جهازك', notSaved: '⚠️ ما اتحفظش: المتصفح ده مانع الحفظ. استخدم "نزّل نسخة احتياطية".',
+    setupTitle: 'اظبط أسعارك الأول', setupSub: 'الأرقام الرمادي دي مجرد أمثلة. اكتب سعر ساعتك إنت.',
+    setupSave: 'احفظ وابدأ', setupErr: 'املا الأسعار التلاتة بأرقام أكبر من 0.',
+    howTitle: 'بيشتغل إزاي؟', loadEx: 'جرّب مثال', loadExConfirm: 'تستبدل المشروع الحالي بالمثال؟',
+    how: ['ضيف توليدات إفهم وعمليات Magnific وأي مصاريف تانية. دول مع بعض هما التكاليف.',
+          'اكتب المشروع هياخد كام ساعة شغل.',
+          'اختار "بالساعة" (الساعات × سعر ساعتك) أو "سعر ثابت" (تكتب السعر اللي عايزه).',
+          'هامش الأمان بيزوّد نسبة فوق السعر عشان المفاجآت، زي تعديلات زيادة أو توليدات بايظة.',
+          'التقريب بيطلّع السعر النهائي لأقرب 50 جنيه لفوق. "هتكسب كام" = السعر النهائي − التكاليف.'],
+    c1: '1 · توليدات إفهم', type: 'النوع', costPerGen: 'تكلفة التوليدة (ج.م)', gens: 'عدد التوليدات', addGen: '+ ضيف سطر توليد',
+    c2: '2 · عمليات Magnific', credPerOp: 'كريدت لكل عملية', ops: 'عدد العمليات', addOp: '+ ضيف سطر عملية',
+    c3: '3 · مصاريف تانية', name: 'الاسم', egpCol: 'ج.م', addOther: '+ ضيف مصروف', remove: 'امسح',
+    c4: '4 · ساعات الشغل وطريقة التسعير', hours: 'ساعات الشغل (مطلوب، أكتر من 0)', method: 'طريقة التسعير',
+    hourly: 'بالساعة', fixed: 'سعر ثابت', level: 'المستوى', fixedLbl: 'السعر اللي عايز تقوله للعميل (ج.م)', risk: 'هامش أمان',
+    lvlB: 'مبتدئ', lvlI: 'متوسط', lvlP: 'محترف', perH: 'ج.م/ساعة',
+    tImage: 'صورة', tVideo: 'فيديو', tVoice: 'صوت', tAvatar: 'أفاتار',
+    c5: '5 · تفاصيل العرض (لملخص العميل)', c5sub: 'كلها اختيارية. الخانات الفاضية مش هتظهر في الملخص. تكاليفك وساعاتك ومكسبك عمرهم ما بيظهروا للعميل.',
+    client: 'اسم العميل', project: 'اسم المشروع', deliv: 'التسليمات (العميل هيستلم إيه)',
+    fill: 'املا من السطور بتاعتي', fillHint: 'مسودة من كميات إفهم وMagnific (حسب النوع). عدّل فيها براحتك.',
+    fillNone: 'ضيف سطور توليد أو عمليات بكمية الأول.', fillArm: 'دوس تاني عشان تستبدل كلامك',
+    fillArmMsg: 'الخانة فيها كلام. دوس تاني خلال 5 ثواني عشان تستبدله.', fillDone: 'اتملت — عدّل براحتك.',
+    days: 'مدة التسليم (أيام)', revs: 'عدد التعديلات', valid: 'العرض ساري لحد', notes: 'ملاحظات / حاجات مش مشمولة',
+    settings: 'الإعدادات', rates: 'سعر الساعة (ج.م)',
+    riskOpts: 'اختيارات هامش الأمان (% مفصولة بفاصلة)', roundNote: 'التقريب: السعر النهائي بيتقرّب لفوق لأقرب 50 جنيه.',
+    resetSet: 'رجّع الإعدادات للأصل',
+    backup: 'نسخة احتياطية', backupSub: 'بياناتك محفوظة في المتصفح ده بس. نزّل ملف نسخة احتياطية عشان تحافظ عليها أو تنقلها لجهاز تاني.',
+    export: 'نزّل نسخة احتياطية', import: 'استرجع من نسخة احتياطية',
+    importConfirm: 'الاسترجاع هيمسح كل البيانات الحالية ويحط مكانها اللي في الملف. الأول هننزّلك نسخة من بياناتك الحالية. تكمل؟',
+    importOk: 'اترجعت ✓', importBad: 'الملف ده مش نسخة احتياطية من EhsibAI. محصلش أي تغيير.', exportOk: 'النسخة الاحتياطية نزلت ✓',
+    result: 'النتيجة', finalPrice: 'السعر النهائي', cur: 'ج.م',
+    rEfham: 'توليدات إفهم', rMag: 'Magnific', credits: 'كريدت', rOther: 'مصاريف تانية', rCosts: 'التكاليف',
+    rLabour: 'أجر شغلك', rTyped: 'السعر اللي كتبته', rRisk: 'هامش أمان', rTotH: 'الإجمالي (التكاليف + أجر شغلك + هامش الأمان)', rTotF: 'الإجمالي (السعر + هامش الأمان)',
+    rRound: 'التقريب', rFinal: 'السعر النهائي (ج.م)', rEarn: 'هتكسب كام', rPerHour: 'في الساعة',
+    needHours: 'اكتب ساعات الشغل (أكتر من 0).',
+    loss: '🛑 السعر أقل من التكاليف — كده هتخسر',
+    below: '⚠️ أقل من سعر الساعة: بتكسب في الساعة أقل من سعر ساعة المبتدئ',
+    clearProj: 'ابدأ مشروع جديد (الإعدادات هتفضل زي ما هي)',
+    sumTitle: 'ملخص العميل', sumSub: 'ده اللي العميل هيشوفه: السعر وتفاصيل العرض بس.', sumLang: 'لغة الملخص',
+    copy: 'انسخ ملخص العميل', copied: 'اتنسخ ✓', copyFail: 'مقدرناش ننسخ لوحدنا — الكلام متحدد: دوس Ctrl+C (أو اضغط مطوّل ← نسخ).',
+    sumPh: 'اكتب ساعات الشغل (أكتر من 0) عشان يطلع السعر والملخص.',
+    feedback: 'ابعت رأيك', community: 'معمول بواسطة عضو في مجتمع إفهم', exampleName: 'مشروع تجريبي'
+  }
+};
+var LANG = 'ar', SUMLANG = 'ar';
+function t(k){ return TX[LANG][k]; }
+function nf(n){ return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+function ni(n){ return n.toLocaleString('en-US', { maximumFractionDigits: 2 }); }
+function arCount(n, one, two, few){ // Egyptian-style counting
+  if (n === 1) return '1 ' + one;
+  if (n === 2 && two) return two;
+  if (n >= 3 && n <= 10 && Number.isInteger(n)) return n + ' ' + few;
+  return ni(n) + ' ' + one;
+}
+function hoursTxt(h){ return LANG === 'ar' ? arCount(h, 'ساعة', 'ساعتين', 'ساعات') : ni(h) + ' h'; }
+
+/* ============ CLIENT SUMMARY (final price + quote details only) ============ */
+//SUMMARY-START
+var MONTHS = { en: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+               ar: ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'] };
+function fmtDate(s, L){
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || '');
+  if (!m || +m[2] < 1 || +m[2] > 12) return '';
+  return (+m[3]) + ' ' + MONTHS[L][+m[2] - 1] + ' ' + m[1];
+}
+var SUMW = {
+  en: { quote: 'Quote', forW: 'For: ', get: 'What you get:', price: 'Price: ', cur: ' EGP', del: 'Delivery: ', revs: 'Revisions included: ', valid: 'Valid until: ', notes: 'Notes:' },
+  ar: { quote: 'عرض سعر', forW: 'للعميل: ', get: 'التسليمات:', price: 'السعر: ', cur: ' ج.م', del: 'مدة التسليم: ', revs: 'عدد التعديلات: ', valid: 'العرض ساري لحد: ', notes: 'ملاحظات:' }
+};
+function buildSummary(price, Q, L){
+  L = L || 'en';
+  var W = SUMW[L];
+  var T = function(s){ return String(s == null ? '' : s).trim(); };
+  var proj = T(Q.project), cli = T(Q.client);
+  var head = [proj ? W.quote + ' — ' + proj : W.quote];
+  if (cli) head.push(W.forW + cli);
+  var parts = [head.join('\n')];
+  var del = T(Q.deliverables);
+  if (del) parts.push(W.get + '\n' + del);
+  var terms = [W.price + price.toLocaleString('en-US') + W.cur];
+  var d = parseFloat(Q.days);
+  if (isFinite(d) && d > 0) terms.push(W.del + (L === 'ar' ? arCount(d, 'يوم', 'يومين', 'أيام') : d + (d === 1 ? ' day' : ' days')));
+  var rv = T(Q.revisions);
+  if (rv !== '' && isFinite(+rv) && +rv >= 0) terms.push(W.revs + (+rv));
+  var vu = fmtDate(T(Q.valid), L);
+  if (vu) terms.push(W.valid + vu);
+  parts.push(terms.join('\n'));
+  var nt = T(Q.notes);
+  if (nt) parts.push(W.notes + '\n' + nt);
+  return parts.join('\n\n');
+}
+//SUMMARY-END
+
+/* ============ DELIVERABLES DRAFT (client-facing: no tool names) ============ */
+var DEL_ORDER = ['Image', 'Video', 'Voice', 'Avatar'];
+var DEL_NAMES = {
+  en: { Image: ['image', 'images'], Video: ['video', 'videos'], Voice: ['voice-over', 'voice-overs'], Avatar: ['avatar video', 'avatar videos'] },
+  ar: { Image: ['صورة', 'صورتين', 'صور'], Video: ['فيديو', 'فيديوهين', 'فيديوهات'], Voice: ['تعليق صوتي', 'تعليقين صوتيين', 'تعليقات صوتية'], Avatar: ['فيديو أفاتار', 'فيديوهين أفاتار', 'فيديوهات أفاتار'] }
+};
+function buildDeliverables(efham, mag, L){
+  var tot = {};
+  (efham || []).concat(mag || []).forEach(function(r){
+    var n = +r.qty || 0;
+    if (n > 0 && DEL_NAMES.en[r.type]) tot[r.type] = (tot[r.type] || 0) + n;
+  });
+  return DEL_ORDER.filter(function(x){ return tot[x] > 0; }).map(function(x){
+    var n = r2(tot[x]), w = DEL_NAMES[L][x];
+    if (L === 'ar') return arCount(n, w[0], w[1], w[2]);
+    return n + ' ' + (n === 1 ? w[0] : w[1]);
+  }).join('\n');
+}
+var fillArmed = false, fillTimer = null;
+function resetFill(){ fillArmed = false; clearTimeout(fillTimer); $('fillDel').textContent = t('fill'); }
+function doFill(){
+  var txt = buildDeliverables(P.efham, P.mag, SUMLANG), msg = $('fillMsg');
+  if (!txt) { msg.textContent = t('fillNone'); return; }
+  var cur = $('q_deliverables').value.trim();
+  if (cur && cur !== txt && !fillArmed) {
+    fillArmed = true;
+    $('fillDel').textContent = t('fillArm');
+    msg.textContent = t('fillArmMsg');
+    fillTimer = setTimeout(function(){ resetFill(); msg.textContent = ''; }, 5000);
+    return;
+  }
+  resetFill();
+  Q.deliverables = txt; $('q_deliverables').value = txt;
+  msg.textContent = t('fillDone');
+  recompute();
+}
+
+/* ============ STATE ============ */
+var DEFAULTS = { rates: { B: 200, I: 500, P: 1000 }, perCredit: MAGNIFIC_COST_PER_CREDIT, riskOpts: [0, 5, 10, 25, 50] };
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+var S = clone(DEFAULTS);
+var TYPES = ['Image', 'Video', 'Voice', 'Avatar'];
+function newEf(){ return { type: 'Image', price: '', qty: '1' }; }
+function newMag(){ return { type: 'Image', credits: '', qty: '1' }; }
+var P = { efham: [newEf()], mag: [newMag()], other: [], method: 'hourly', level: 'B', risk: 0 };
+var Q_FIELDS = ['client', 'project', 'deliverables', 'days', 'revisions', 'valid', 'notes'];
+function emptyQ(){ var o = {}; Q_FIELDS.forEach(function(k){ o[k] = ''; }); return o; }
+var Q = emptyQ();
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+/* ============ STATIC TEXT + DIRECTION ============ */
+function applyLang(){
+  var html = document.documentElement;
+  html.lang = LANG; html.dir = LANG === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-t]').forEach(function(el){ el.textContent = t(el.dataset.t); });
+  $('langBtn').textContent = LANG === 'ar' ? 'EN' : 'ع';
+  $('langBtn').setAttribute('aria-label', LANG === 'ar' ? 'Switch to English' : 'التحويل للعربي');
+  $('howList').innerHTML = t('how').map(function(s){ return '<li>' + esc(s) + '</li>'; }).join('');
+  $('sumText').setAttribute('aria-label', t('sumTitle'));
+  if (!fillArmed) $('fillDel').textContent = t('fill');
+  if (!$('fillMsg').dataset.used) $('fillMsg').textContent = t('fillHint');
+  $('feedbackWrap').hidden = !FEEDBACK_URL; if (FEEDBACK_URL) $('feedbackLink').href = FEEDBACK_URL;
+  $('communityLine').hidden = !SHOW_COMMUNITY_LINE;
+  renderRows(); renderTopSelects(); showStatus(); recompute();
+}
+function applySumLang(){
+  $('sumAr').classList.toggle('on', SUMLANG === 'ar'); $('sumEn').classList.toggle('on', SUMLANG === 'en');
+  $('sumText').dir = SUMLANG === 'ar' ? 'rtl' : 'ltr';
+  $('q_deliverables').dir = 'auto';
+}
+
+/* ============ ROWS ============ */
+function typeSel(r, k, f){
+  return '<div><label>' + t('type') + '</label><select data-k="' + k + '" data-f="' + f + '">' +
+    TYPES.map(function(x){ return '<option value="' + x + '"' + (x === r.type ? ' selected' : '') + '>' + t('t' + x) + '</option>'; }).join('') + '</select></div>';
+}
+function numIn(label, val, k, f){
+  return '<div><label>' + label + '</label><input type="number" min="0" step="any" inputmode="decimal" value="' + esc(val) + '" data-k="' + k + '" data-f="' + f + '"></div>';
+}
+function delBtn(k, f){ return '<button class="x" data-k="' + k + '" data-f="' + f + '" aria-label="' + t('remove') + '">✕</button>'; }
+function renderRows(){
+  $('efhamRows').innerHTML = P.efham.map(function(r, k){
+    return '<div class="row three">' + typeSel(r, k, 'efhamType') + numIn(t('costPerGen'), r.price, k, 'efhamPrice') + numIn(t('gens'), r.qty, k, 'efhamQty') + delBtn(k, 'efhamDel') + '</div>';
+  }).join('');
+  $('magRows').innerHTML = P.mag.map(function(r, k){
+    return '<div class="row three">' + typeSel(r, k, 'magType') + numIn(t('credPerOp'), r.credits, k, 'magCred') + numIn(t('ops'), r.qty, k, 'magQty') + delBtn(k, 'magDel') + '</div>';
+  }).join('');
+  $('otherRows').innerHTML = P.other.map(function(r, k){
+    return '<div class="row other"><div><label>' + t('name') + '</label><input type="text" autocomplete="off" value="' + esc(r.name) + '" data-k="' + k + '" data-f="othName"></div>' +
+      numIn(t('egpCol'), r.amount, k, 'othAmt') + delBtn(k, 'othDel') + '</div>';
+  }).join('');
+}
+function renderQ(){ Q_FIELDS.forEach(function(k){ $('q_' + k).value = Q[k]; }); }
+function renderSettings(){
+  $('rB').value = S.rates.B; $('rI').value = S.rates.I; $('rP').value = S.rates.P;
+  $('riskOpts').value = S.riskOpts.join(', ');
+  renderTopSelects();
+}
+function renderTopSelects(){
+  $('level').innerHTML = ['B', 'I', 'P'].map(function(k){ return '<option value="' + k + '"' + (P.level === k ? ' selected' : '') + '>' + t('lvl' + k) + ' — ' + ni(S.rates[k]) + ' ' + t('perH') + '</option>'; }).join('');
+  if (S.riskOpts.indexOf(+P.risk) < 0) P.risk = S.riskOpts[0] || 0;
+  $('risk').innerHTML = S.riskOpts.map(function(v){ return '<option value="' + v + '"' + (v == P.risk ? ' selected' : '') + '>' + v + '%</option>'; }).join('');
+}
+function setMethodUI(){
+  $('mHourly').classList.toggle('on', P.method === 'hourly'); $('mFixed').classList.toggle('on', P.method === 'fixed');
+  $('hourlyBox').hidden = P.method !== 'hourly'; $('fixedBox').hidden = P.method !== 'fixed';
+}
+
+/* ============ RESULT ============ */
+function row(label, val, cls){ return '<tr' + (cls ? ' class="' + cls + '"' : '') + '><td>' + label + '</td><td class="n"><span class="num">' + val + '</span></td></tr>'; }
+var lastSummary = '';
+function currentQuote(){
+  return calcQuote({
+    efham: P.efham, mag: P.mag, perCredit: MAGNIFIC_COST_PER_CREDIT, other: P.other,
+    hours: $('hours').value, method: P.method, rate: S.rates[P.level], fixed: $('fixed').value,
+    riskPct: P.risk, beginnerRate: S.rates.B
+  });
+}
+function updateSummary(q){
+  var txt = q.error ? '' : buildSummary(q.price, Q, SUMLANG);
+  $('sumText').value = txt;
+  $('copySum').disabled = !txt;
+  $('sumText').placeholder = t('sumPh');
+  if (txt !== lastSummary) { $('copyMsg').textContent = ''; lastSummary = txt; }
+}
+function recompute(){
+  queueSave();
+  var q = currentQuote();
+  updateSummary(q);
+  var h = '';
+  if (!q.error) h += '<div class="hero"><div class="lbl">' + t('finalPrice') + '</div><div class="big" id="bigPrice">' + ni(q.price) + '<span class="cur">' + t('cur') + '</span></div></div>';
+  h += '<table class="res">';
+  h += row(t('rEfham'), nf(q.efham));
+  h += row(t('rMag') + ' (<bdi>' + ni(q.credits) + '</bdi> ' + t('credits') + ' × <bdi>' + MAGNIFIC_COST_PER_CREDIT + '</bdi>)', nf(q.magnific));
+  h += row(t('rOther'), nf(q.other));
+  h += row(t('rCosts'), nf(q.costs), 'sum');
+  if (q.error) { $('out').innerHTML = h + '</table><p class="err">' + t(q.error) + '</p>'; return; }
+  if (q.method === 'hourly') h += row(t('rLabour') + ' (' + hoursTxt(q.hours) + ')', nf(q.labour));
+  else h += row(t('rTyped'), nf(q.typed));
+  h += row(t('rRisk') + ' (<span class="num">' + P.risk + '%</span>)', nf(q.risk));
+  h += row(q.method === 'hourly' ? t('rTotH') : t('rTotF'), nf(q.pre), 'sum');
+  h += row(t('rRound'), nf(q.rounding));
+  h += row(t('rFinal'), nf(q.price), 'tot');
+  h += row(t('rEarn'), nf(q.earn), 'sum');
+  h += row(t('rPerHour'), nf(q.perHour), 'sum');
+  h += '</table>';
+  if (q.loss) h += '<div class="alert bad" id="lossMsg">' + t('loss') + '</div>';
+  if (q.belowBeginner) h += '<div class="alert warn" id="belowMsg">' + t('below') + ' (<bdi>' + ni(S.rates.B) + '</bdi> ' + t('perH') + ').</div>';
+  $('out').innerHTML = h;
+}
+
+/* ============ COPY ============ */
+function doCopy(){
+  var ta = $('sumText'), txt = ta.value;
+  if (!txt) return;
+  var done = function(ok){
+    if (ok) $('copyMsg').textContent = t('copied');
+    else { ta.focus(); ta.select(); $('copyMsg').textContent = t('copyFail'); }
+  };
+  var fallback = function(){ var ok = false; try { ta.focus(); ta.select(); ok = document.execCommand('copy'); } catch (e) {} done(ok); };
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function(){ done(true); }, fallback);
+    else fallback();
+  } catch (e) { fallback(); }
+}
+
+/* ============ SETUP + EXAMPLE ============ */
+function showSetup(){
+  $('setupCard').hidden = !!S.setupDone;
+}
+function doSetup(){
+  var vals = ['sB', 'sI', 'sP'].map(function(id){ var v = $(id).value; return v === '' ? NaN : +v; });
+  if (vals.some(function(v){ return !(v > 0); })) { $('setupErr').textContent = t('setupErr'); return; }
+  S.rates = { B: vals[0], I: vals[1], P: vals[2] }; S.perCredit = MAGNIFIC_COST_PER_CREDIT; S.setupDone = true;
+  $('setupErr').textContent = '';
+  renderSettings(); showSetup(); recompute();
+}
+function projectHasData(){
+  return $('hours').value !== '' || $('fixed').value !== '' || P.other.length > 0 ||
+    P.efham.some(function(r){ return r.price !== ''; }) || P.mag.some(function(r){ return r.credits !== ''; }) ||
+    Q_FIELDS.some(function(k){ return String(Q[k]).trim() !== ''; });
+}
+function loadExample(){
+  if (projectHasData() && !window.confirm(t('loadExConfirm'))) return;
+  P.efham = [{ type: 'Video', price: '10', qty: '30' }];
+  P.mag = [{ type: 'Image', credits: '100', qty: '20' }];
+  P.other = []; P.method = 'hourly'; P.level = 'B'; P.risk = S.riskOpts.indexOf(0) >= 0 ? 0 : S.riskOpts[0];
+  $('hours').value = '10'; $('fixed').value = '';
+  Q = emptyQ(); Q.project = t('exampleName');
+  setMethodUI(); renderRows(); renderQ(); renderTopSelects(); recompute();
+}
+
+/* ============ SAVING (this browser only) ============ */
+var STATE_KEY = 'ehsibai_v03_state', OLD_KEY = 'ehsibai_v01_state';
+var ready = false, saveTimer = null, lastOk = null;
+function snapshot(){
+  return { app: 'EhsibAI', version: '0.3', lang: LANG, sumLang: SUMLANG, S: S, Q: Q,
+    P: { efham: P.efham, mag: P.mag, other: P.other, method: P.method, level: P.level, risk: P.risk, hours: $('hours').value, fixed: $('fixed').value } };
+}
+function validState(d){
+  return !!(d && d.S && d.S.rates && Array.isArray(d.S.riskOpts) && d.P && Array.isArray(d.P.efham) && Array.isArray(d.P.mag) && Array.isArray(d.P.other));
+}
+function applyState(d){
+  S = { rates: { B: +d.S.rates.B || 0, I: +d.S.rates.I || 0, P: +d.S.rates.P || 0 }, perCredit: MAGNIFIC_COST_PER_CREDIT,
+        riskOpts: d.S.riskOpts.map(Number).filter(function(n){ return isFinite(n) && n >= 0; }), setupDone: d.S.setupDone !== false };
+  if (!S.riskOpts.length) S.riskOpts = DEFAULTS.riskOpts.slice();
+  P.efham = d.P.efham.length ? d.P.efham : [newEf()];
+  P.mag = d.P.mag.length ? d.P.mag : [newMag()];
+  P.other = d.P.other; P.method = d.P.method === 'fixed' ? 'fixed' : 'hourly';
+  P.level = ['B', 'I', 'P'].indexOf(d.P.level) >= 0 ? d.P.level : 'B'; P.risk = +d.P.risk || 0;
+  $('hours').value = d.P.hours || ''; $('fixed').value = d.P.fixed || '';
+  Q = emptyQ();
+  if (d.Q && typeof d.Q === 'object') Q_FIELDS.forEach(function(k){ if (d.Q[k] != null) Q[k] = String(d.Q[k]); });
+  if (d.lang === 'en' || d.lang === 'ar') LANG = d.lang;
+  if (d.sumLang === 'en' || d.sumLang === 'ar') SUMLANG = d.sumLang;
+  setMethodUI(); renderSettings(); renderRows(); renderQ(); showSetup(); applySumLang();
+}
+function showStatus(){ $('saveStatus').textContent = lastOk === false ? t('notSaved') : t('saved'); }
+function queueSave(){ if (!ready) return; clearTimeout(saveTimer); saveTimer = setTimeout(doSave, 300); }
+function doSave(){
+  try { localStorage.setItem(STATE_KEY, JSON.stringify(snapshot())); lastOk = true; } catch (e) { lastOk = false; }
+  showStatus();
+}
+function loadSaved(){
+  var keys = [STATE_KEY, OLD_KEY];
+  for (var i = 0; i < keys.length; i++) {
+    try { var raw = localStorage.getItem(keys[i]); if (raw) { var d = JSON.parse(raw); if (validState(d)) { applyState(d); return true; } } } catch (e) {}
+  }
+  return false;
+}
+
+/* ============ BACKUP ============ */
+function download(obj){
+  var blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ehsibai-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+}
+function doExport(){ download(snapshot()); $('backupMsg').textContent = t('exportOk'); }
+function doImport(file){
+  var rd = new FileReader();
+  rd.onload = function(){
+    var d = null;
+    try { d = JSON.parse(rd.result); } catch (e) {}
+    if (!validState(d)) { $('backupMsg').textContent = t('importBad'); return; }
+    if (!window.confirm(t('importConfirm'))) return;
+    download(snapshot());
+    applyState(d); applyLang(); doSave();
+    $('backupMsg').textContent = t('importOk');
+  };
+  rd.readAsText(file);
+}
+
+/* ============ EVENTS ============ */
+function numOr0(v){ return v === '' ? 0 : +v; }
+document.addEventListener('input', function(e){
+  var el = e.target, f = el.dataset.f, k = +el.dataset.k;
+  if (el.id === 'importFile' || /^s(B|I|P)$/.test(el.id)) return;
+  if (el.dataset.q) Q[el.dataset.q] = el.value;
+  else if (f === 'efhamQty') P.efham[k].qty = el.value;
+  else if (f === 'efhamPrice') P.efham[k].price = el.value;
+  else if (f === 'magQty') P.mag[k].qty = el.value;
+  else if (f === 'magCred') P.mag[k].credits = el.value;
+  else if (f === 'othName') P.other[k].name = el.value;
+  else if (f === 'othAmt') P.other[k].amount = el.value;
+  else if (el.id === 'rB' || el.id === 'rI' || el.id === 'rP') { S.rates[el.id.charAt(1)] = numOr0(el.value); renderTopSelects(); }
+  else if (el.id === 'riskOpts') {
+    var arr = el.value.split(',').map(function(s){ return parseFloat(s); }).filter(function(n){ return isFinite(n) && n >= 0; });
+    if (arr.length) { S.riskOpts = arr; renderTopSelects(); }
+  }
+  recompute();
+});
+document.addEventListener('change', function(e){
+  var el = e.target, f = el.dataset.f, k = +el.dataset.k;
+  if (el.id === 'importFile') { if (el.files && el.files[0]) doImport(el.files[0]); el.value = ''; return; }
+  if (/^s(B|I|P)$/.test(el.id)) return;
+  if (el.dataset.q) Q[el.dataset.q] = el.value;
+  else if (f === 'efhamType') P.efham[k].type = el.value;
+  else if (f === 'magType') P.mag[k].type = el.value;
+  else if (el.id === 'level') P.level = el.value;
+  else if (el.id === 'risk') P.risk = +el.value;
+  recompute();
+});
+document.addEventListener('click', function(e){
+  var el = e.target.closest('button'); if (!el) return;
+  var id = el.id, f = el.dataset.f, k = +el.dataset.k;
+  if (id === 'copySum') { doCopy(); return; }
+  if (id === 'fillDel') { $('fillMsg').dataset.used = '1'; doFill(); return; }
+  if (id === 'langBtn') { LANG = LANG === 'ar' ? 'en' : 'ar'; resetFill(); applyLang(); return; }
+  if (id === 'sumAr' || id === 'sumEn') { SUMLANG = id === 'sumAr' ? 'ar' : 'en'; applySumLang(); recompute(); return; }
+  if (id === 'setupSave') { doSetup(); return; }
+  if (id === 'loadEx') { loadExample(); return; }
+  if (id === 'exportBtn') { doExport(); return; }
+  if (id === 'importBtn') { $('importFile').click(); return; }
+  if (f === 'efhamDel') { P.efham.splice(k, 1); renderRows(); }
+  else if (f === 'magDel') { P.mag.splice(k, 1); renderRows(); }
+  else if (f === 'othDel') { P.other.splice(k, 1); renderRows(); }
+  else if (id === 'addEfham') { P.efham.push(newEf()); renderRows(); }
+  else if (id === 'addMag') { P.mag.push(newMag()); renderRows(); }
+  else if (id === 'addOther') { P.other.push({ name: '', amount: '' }); renderRows(); }
+  else if (id === 'clearProj') { P.efham = [newEf()]; P.mag = [newMag()]; P.other = []; $('hours').value = ''; $('fixed').value = ''; Q = emptyQ(); renderQ(); renderRows(); }
+  else if (id === 'resetSet') { var done = S.setupDone; S = clone(DEFAULTS); S.setupDone = done; renderSettings(); }
+  else if (id === 'mHourly' || id === 'mFixed') { P.method = id === 'mHourly' ? 'hourly' : 'fixed'; setMethodUI(); }
+  else return;
+  recompute();
+});
+
+/* ============ START ============ */
+if (!loadSaved()) { S.setupDone = false; }
+renderSettings(); renderRows(); renderQ(); showSetup(); applySumLang();
+ready = true;
+applyLang();
+doSave();
+</script>
+</body>
+</html>
