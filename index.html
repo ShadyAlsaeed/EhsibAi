@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>EhsibAI — احسب AI</title>
+<meta name="description" content="احسب سعر مشاريع الـ AI بتاعتك: تكاليف إفهم وMagnific + ساعات شغلك + هامش أمان = سعر نهائي وملخص جاهز للعميل. بياناتك بتفضل على جهازك.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="EhsibAI — احسب AI">
+<meta property="og:description" content="احسب سعر مشاريع الـ AI بتاعتك: تكاليف + ساعات شغلك + هامش أمان = سعر نهائي وملخص جاهز للعميل.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
@@ -30,8 +34,8 @@ h1{font-size:22px;margin:0;line-height:1.3}
 .card.setup{border:2px solid var(--violet);background:#fff}
 label{display:block;font-size:13px;color:var(--mute);margin-bottom:4px}
 input,select,textarea{width:100%;font:inherit;min-height:48px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
-input[type=number],input[type=date]{direction:ltr}
-html[dir=rtl] input[type=number]{text-align:right}
+input[data-num],input[type=date]{direction:ltr}
+html[dir=rtl] input[data-num]{text-align:right}
 textarea{resize:vertical;min-height:96px}
 :focus-visible{outline:3px solid var(--violet);outline-offset:2px}
 input:focus,select:focus,textarea:focus{outline:2px solid var(--violet);outline-offset:0}
@@ -86,7 +90,7 @@ footer a{color:var(--violet)}
 <header>
   <div class="hbar">
     <div class="brand">
-      <h1>EhsibAI · <span dir="rtl">احسب AI</span><span class="beta">v0.3 beta</span></h1>
+      <h1>EhsibAI · <span dir="rtl">احسب AI</span><span class="beta">v0.3.1 beta</span></h1>
       <p class="tag" data-t="tagline"></p>
     </div>
     <button id="langBtn" aria-label="Language"></button>
@@ -100,9 +104,9 @@ footer a{color:var(--violet)}
     <h2 data-t="setupTitle"></h2>
     <p class="sub" data-t="setupSub"></p>
     <div class="row rates">
-      <div><label for="sB" data-t="lvlB"></label><input id="sB" type="number" min="0" step="any" inputmode="decimal" placeholder="200"></div>
-      <div><label for="sI" data-t="lvlI"></label><input id="sI" type="number" min="0" step="any" inputmode="decimal" placeholder="500"></div>
-      <div><label for="sP" data-t="lvlP"></label><input id="sP" type="number" min="0" step="any" inputmode="decimal" placeholder="1000"></div>
+      <div><label for="sB" data-t="lvlB"></label><input id="sB" type="text" data-num="1" min="0" step="any" inputmode="decimal" placeholder="200"></div>
+      <div><label for="sI" data-t="lvlI"></label><input id="sI" type="text" data-num="1" min="0" step="any" inputmode="decimal" placeholder="500"></div>
+      <div><label for="sP" data-t="lvlP"></label><input id="sP" type="text" data-num="1" min="0" step="any" inputmode="decimal" placeholder="1000"></div>
     </div>
     <p class="err" id="setupErr" aria-live="polite"></p>
     <div class="btns"><button id="setupSave" class="primary" data-t="setupSave"></button></div>
@@ -139,7 +143,7 @@ footer a{color:var(--violet)}
       <div class="card">
         <h2 data-t="c4"></h2>
         <label for="hours" data-t="hours"></label>
-        <input id="hours" type="number" min="0" step="any" inputmode="decimal" value="">
+        <input id="hours" type="text" data-num="1" min="0" step="any" inputmode="decimal" value="">
         <div class="ml"><label data-t="method"></label>
           <div class="seg"><button id="mHourly" class="on" data-t="hourly"></button><button id="mFixed" data-t="fixed"></button></div>
         </div>
@@ -148,7 +152,7 @@ footer a{color:var(--violet)}
         </div>
         <div id="fixedBox" class="ml" hidden>
           <label for="fixed" data-t="fixedLbl"></label>
-          <input id="fixed" type="number" min="0" step="any" inputmode="decimal">
+          <input id="fixed" type="text" data-num="1" min="0" step="any" inputmode="decimal">
         </div>
         <div class="ml"><label for="risk" data-t="risk"></label><select id="risk"></select></div>
       </div>
@@ -165,8 +169,8 @@ footer a{color:var(--violet)}
           <div class="btns ml"><button id="fillDel"></button></div>
           <p class="small" id="fillMsg" aria-live="polite"></p></div>
         <div class="qgrid ml">
-          <div><label for="q_days" data-t="days"></label><input id="q_days" type="number" min="0" step="any" inputmode="decimal" data-q="days"></div>
-          <div><label for="q_revisions" data-t="revs"></label><input id="q_revisions" type="number" min="0" step="1" inputmode="numeric" data-q="revisions"></div>
+          <div><label for="q_days" data-t="days"></label><input id="q_days" type="text" data-num="1" min="0" step="any" inputmode="decimal" data-q="days"></div>
+          <div><label for="q_revisions" data-t="revs"></label><input id="q_revisions" type="text" data-num="1" min="0" step="1" inputmode="numeric" data-q="revisions"></div>
           <div><label for="q_valid" data-t="valid"></label><input id="q_valid" type="date" data-q="valid"></div>
         </div>
         <div class="ml"><label for="q_notes" data-t="notes"></label>
@@ -179,9 +183,9 @@ footer a{color:var(--violet)}
           <div class="ml">
             <label data-t="rates"></label>
             <div class="row rates">
-              <div><label for="rB" data-t="lvlB"></label><input id="rB" type="number" min="0" step="any" inputmode="decimal"></div>
-              <div><label for="rI" data-t="lvlI"></label><input id="rI" type="number" min="0" step="any" inputmode="decimal"></div>
-              <div><label for="rP" data-t="lvlP"></label><input id="rP" type="number" min="0" step="any" inputmode="decimal"></div>
+              <div><label for="rB" data-t="lvlB"></label><input id="rB" type="text" data-num="1" min="0" step="any" inputmode="decimal"></div>
+              <div><label for="rI" data-t="lvlI"></label><input id="rI" type="text" data-num="1" min="0" step="any" inputmode="decimal"></div>
+              <div><label for="rP" data-t="lvlP"></label><input id="rP" type="text" data-num="1" min="0" step="any" inputmode="decimal"></div>
             </div>
             <div class="ml"><label for="riskOpts" data-t="riskOpts"></label>
               <input id="riskOpts" type="text" dir="ltr"></div>
@@ -317,6 +321,7 @@ var TX = {
     sumTitle: 'Client summary', sumSub: 'This is what the client sees: price and quote details only.', sumLang: 'Summary language',
     copy: 'Copy client summary', copied: 'Copied ✓', copyFail: 'Could not copy automatically — the text is selected: press Ctrl+C (or long-press → Copy).',
     sumPh: 'Enter hours of work (more than 0) to get a price and a summary.',
+    clearConfirm: 'Clear this project? Your Settings stay.', resetConfirm: 'Reset your rates and risk options to the defaults?',
     feedback: 'Send feedback', community: 'Built by a member of the Efham community', exampleName: 'Example project'
   },
   ar: {
@@ -362,6 +367,7 @@ var TX = {
     sumTitle: 'ملخص العميل', sumSub: 'ده اللي العميل هيشوفه: السعر وتفاصيل العرض بس.', sumLang: 'لغة الملخص',
     copy: 'انسخ ملخص العميل', copied: 'اتنسخ ✓', copyFail: 'مقدرناش ننسخ لوحدنا — الكلام متحدد: دوس Ctrl+C (أو اضغط مطوّل ← نسخ).',
     sumPh: 'اكتب ساعات الشغل (أكتر من 0) عشان يطلع السعر والملخص.',
+    clearConfirm: 'تمسح المشروع ده؟ الإعدادات هتفضل زي ما هي.', resetConfirm: 'ترجّع أسعارك واختيارات هامش الأمان للأصل؟',
     feedback: 'ابعت رأيك', community: 'معمول بواسطة عضو في مجتمع إفهم', exampleName: 'مشروع تجريبي'
   }
 };
@@ -493,7 +499,7 @@ function typeSel(r, k, f){
     TYPES.map(function(x){ return '<option value="' + x + '"' + (x === r.type ? ' selected' : '') + '>' + t('t' + x) + '</option>'; }).join('') + '</select></div>';
 }
 function numIn(label, val, k, f){
-  return '<div><label>' + label + '</label><input type="number" min="0" step="any" inputmode="decimal" value="' + esc(val) + '" data-k="' + k + '" data-f="' + f + '"></div>';
+  return '<div><label>' + label + '</label><input type="text" data-num="1" min="0" step="any" inputmode="decimal" value="' + esc(val) + '" data-k="' + k + '" data-f="' + f + '"></div>';
 }
 function delBtn(k, f){ return '<button class="x" data-k="' + k + '" data-f="' + f + '" aria-label="' + t('remove') + '">✕</button>'; }
 function renderRows(){
@@ -673,8 +679,20 @@ function doImport(file){
 
 /* ============ EVENTS ============ */
 function numOr0(v){ return v === '' ? 0 : +v; }
+/* Arabic/Persian digits -> 0-9; keep digits and one decimal point */
+function normDigits(s){
+  return String(s).replace(/[\u0660-\u0669]/g, function(c){ return c.charCodeAt(0) - 0x0660; })
+                  .replace(/[\u06F0-\u06F9]/g, function(c){ return c.charCodeAt(0) - 0x06F0; });
+}
+function normNum(s){
+  var v = normDigits(s).replace(/[\u066B,]/g, '.').replace(/[^0-9.]/g, '');
+  var i = v.indexOf('.');
+  return i < 0 ? v : v.slice(0, i + 1) + v.slice(i + 1).replace(/\./g, '');
+}
 document.addEventListener('input', function(e){
   var el = e.target, f = el.dataset.f, k = +el.dataset.k;
+  if (el.dataset.num) { var nv = normNum(el.value); if (nv !== el.value) el.value = nv; }
+  else if (el.id === 'riskOpts') { var rv2 = normDigits(el.value).replace(/[\u060C\u061B]/g, ',').replace(/\u066B/g, '.'); if (rv2 !== el.value) el.value = rv2; }
   if (el.id === 'importFile' || /^s(B|I|P)$/.test(el.id)) return;
   if (el.dataset.q) Q[el.dataset.q] = el.value;
   else if (f === 'efhamQty') P.efham[k].qty = el.value;
@@ -718,8 +736,8 @@ document.addEventListener('click', function(e){
   else if (id === 'addEfham') { P.efham.push(newEf()); renderRows(); }
   else if (id === 'addMag') { P.mag.push(newMag()); renderRows(); }
   else if (id === 'addOther') { P.other.push({ name: '', amount: '' }); renderRows(); }
-  else if (id === 'clearProj') { P.efham = [newEf()]; P.mag = [newMag()]; P.other = []; $('hours').value = ''; $('fixed').value = ''; Q = emptyQ(); renderQ(); renderRows(); }
-  else if (id === 'resetSet') { var done = S.setupDone; S = clone(DEFAULTS); S.setupDone = done; renderSettings(); }
+  else if (id === 'clearProj') { if (projectHasData() && !window.confirm(t('clearConfirm'))) return; P.efham = [newEf()]; P.mag = [newMag()]; P.other = []; $('hours').value = ''; $('fixed').value = ''; Q = emptyQ(); renderQ(); renderRows(); }
+  else if (id === 'resetSet') { if (!window.confirm(t('resetConfirm'))) return; var done = S.setupDone; S = clone(DEFAULTS); S.setupDone = done; renderSettings(); }
   else if (id === 'mHourly' || id === 'mFixed') { P.method = id === 'mHourly' ? 'hourly' : 'fixed'; setMethodUI(); }
   else return;
   recompute();
